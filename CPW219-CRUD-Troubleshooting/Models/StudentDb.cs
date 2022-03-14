@@ -26,13 +26,15 @@
 
         public static void Delete(SchoolContext context, Student s)
         {
-            context.Students.Update(s);
+            context.Students.Remove(s);
+
+            context.SaveChanges();
         }
 
         public static void Update(SchoolContext context, Student s)
         {
             //Mark the object as deleted
-            context.Students.Remove(s);
+            context.Students.Update(s);
 
             //Send delete query to database
             context.SaveChanges();
