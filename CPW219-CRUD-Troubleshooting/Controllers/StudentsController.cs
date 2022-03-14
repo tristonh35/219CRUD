@@ -5,16 +5,16 @@ namespace CPW219_CRUD_Troubleshooting.Controllers
 {
     public class StudentsController : Controller
     {
-        private readonly SchoolContext context;
+        private readonly SchoolContext _context;
 
-        public StudentsController(SchoolContext dbContext)
+        public StudentsController(SchoolContext context)
         {
-            context = dbContext;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            List<Student> students = StudentDb.GetStudents(context);
+            List<Student> students = StudentDb.GetStudents(_context);
             return View();
         }
 
@@ -28,7 +28,8 @@ namespace CPW219_CRUD_Troubleshooting.Controllers
         {
             if (ModelState.IsValid)
             {
-                StudentDb.Add(s, context);
+                _context.Students.Add(s);
+                _context.SaveChanges();
                 ViewData["Message"] = $"{s.Name} was added!";
                 return View();
             }
@@ -40,7 +41,7 @@ namespace CPW219_CRUD_Troubleshooting.Controllers
         public IActionResult Edit(int id)
         {
             //get the student by id
-            Student s = StudentDb.GetStudent(context, id);
+            Student s = StudentDb.GetStudent(_context, id);
 
             //show it on web page
             return View();
@@ -51,7 +52,7 @@ namespace CPW219_CRUD_Troubleshooting.Controllers
         {
             if (ModelState.IsValid)
             {
-                StudentDb.Update(context, s);
+                StudentDb.Update(_context, s);
                 ViewData["Message"] = "Product Updated!";
                 return View(s);
             }
@@ -61,7 +62,7 @@ namespace CPW219_CRUD_Troubleshooting.Controllers
 
         public IActionResult Delete(int id)
         {
-            Student s = StudentDb.GetStudent(context, id);
+            Student s = StudentDb.GetStudent(_context, id);
             return View(s);
         }
 
@@ -69,9 +70,9 @@ namespace CPW219_CRUD_Troubleshooting.Controllers
         public IActionResult DeleteConfirm(int id)
         {
             //Get Product from database
-            Student s = StudentDb.GetStudent(context, id);
+            Student s = StudentDb.GetStudent(_context, id);
 
-            StudentDb.Delete(context, s);
+            StudentDb.Delete(_context, s);
 
             return RedirectToAction("Index");
         }
